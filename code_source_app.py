@@ -1,14 +1,3 @@
-# La grille de sudoku de base (à modifier selon la grille à résoudre)
-L1 = [0, 0, 0, 0, 0, 7, 6, 5, 0]
-L2 = [0, 8, 0, 0, 0, 0, 4, 0, 0]
-L3 = [0, 0, 4, 0, 8, 0, 0, 0, 7]
-L4 = [0, 7, 9, 1, 0, 2, 0, 0, 0]
-L5 = [0, 0, 0, 0, 6, 0, 0, 2, 9]
-L6 = [1, 0, 0, 5, 9, 0, 0, 0, 0]
-L7 = [7, 2, 0, 0, 4, 9, 5, 0, 0]
-L8 = [0, 0, 0, 0, 0, 0, 2, 0, 6]
-L9 = [8, 9, 1, 0, 0, 0, 7, 0, 3]
-
 class Parent():
     def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9):
         self.cp1 = cp1
@@ -32,9 +21,9 @@ class Parent():
                 resultat.append(i)
         return resultat
 
-      
+    
 class m_bloc(Parent):
-    def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9, o, a):
+    def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9, o, a, L1, L2, L3, L4, L5, L6, L7, L8, L9):
             super().__init__(cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9)
             self.o = o
             self.a = a
@@ -61,7 +50,16 @@ class m_bloc(Parent):
                     "cp8": (1, 2),
                     "cp9": (2, 2)
                 }
-            
+            self.L1 = L1
+            self.L2 = L2
+            self.L3 = L3
+            self.L4 = L4
+            self.L5 = L5
+            self.L6 = L6
+            self.L7 = L7
+            self.L8 = L8
+            self.L9 = L9
+
     def cases(self):
         # [values] est liste qui contient tous les composants du bloc
         values = [self.cp1, self.cp2, self.cp3, self.cp4, self.cp5, self.cp6, self.cp7, self.cp8, self.cp9]
@@ -91,13 +89,13 @@ class m_bloc(Parent):
                 if self.dict[e][0] == "free": 
                     # ... on lui ajoute la liste les valeurs manquantes au bloc.
                     self.dict[e].append(m_bloc.manquants(self))
-                    lista = [L1[self.a + x], L2[self.a + x], L3[self.a + x], L4[self.a + x], L5[self.a + x], L6[self.a + x], L7[self.a + x], L8[self.a + x], L9[self.a + x]]
+                    lista = [self.L1[self.a + x], self.L2[self.a + x], self.L3[self.a + x], self.L4[self.a + x], self.L5[self.a + x], self.L6[self.a + x], self.L7[self.a + x], self.L8[self.a + x], self.L9[self.a + x]]
                     # On regarde si chaque possibilité du cp se trouve la colone (lista) de celui-ci
                     for z in lista:
                         if z in self.dict[e][3]:
                             # Si oui la est invalide et elle retiré des issues possibles (dict[3])
                             self.dict[e][3].remove(z)
-                                              
+                                            
         nom = self.o + y
         for u in self.dict:
             listo = []
@@ -154,20 +152,29 @@ class m_bloc(Parent):
                                 self.dict[b][3].remove(réponse)                  
                                         
 
-def action():
+def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
     # Cette fonction correspond à l'action de résolution du sudoku.
     for i in range(10):
+        b1 = [L1[0], L1[1], L1[2], L2[0], L2[1], L2[2], L3[0], L3[1], L3[2]]
+        b2 = [L4[0], L4[1], L4[2], L5[0], L5[1], L5[2], L6[0], L6[1], L6[2]]
+        b3 = [L7[0], L7[1], L7[2], L8[0], L8[1], L8[2], L9[0], L9[1], L9[2]]
+        b4 = [L1[3], L1[4], L1[5], L2[3], L2[4], L2[5], L3[3], L3[4], L3[5]]
+        b5 = [L4[3], L4[4], L4[5], L5[3], L5[4], L5[5], L6[3], L6[4], L6[5]]
+        b6 = [L7[3], L7[4], L7[5], L8[3], L8[4], L8[5], L9[3], L9[4], L9[5]]
+        b7 = [L1[6], L1[7], L1[8], L2[6], L2[7], L2[8], L3[6], L3[7], L3[8]]
+        b8 = [L4[6], L4[7], L4[8], L5[6], L5[7], L5[8], L6[6], L6[7], L6[8]]
+        b9 = [L7[6], L7[7], L7[8], L8[6], L8[7], L8[8], L9[6], L9[7], L9[8]]
         
         # On redéfinit les objet à chaque itération de la boucle pour actualiser les valeurs de chaque case
-        A1 = m_bloc(L1[0], L1[1], L1[2], L2[0], L2[1], L2[2], L3[0], L3[1], L3[2], 1, 0)
-        A2 = m_bloc(L4[0], L4[1], L4[2], L5[0], L5[1], L5[2], L6[0], L6[1], L6[2], 4, 0)
-        A3 = m_bloc(L7[0], L7[1], L7[2], L8[0], L8[1], L8[2], L9[0], L9[1], L9[2], 7, 0)
-        B1 = m_bloc(L1[3], L1[4], L1[5], L2[3], L2[4], L2[5], L3[3], L3[4], L3[5], 1, 3)
-        B2 = m_bloc(L4[3], L4[4], L4[5], L5[3], L5[4], L5[5], L6[3], L6[4], L6[5], 4, 3)
-        B3 = m_bloc(L7[3], L7[4], L7[5], L8[3], L8[4], L8[5], L9[3], L9[4], L9[5], 7, 3)
-        C1 = m_bloc(L1[6], L1[7], L1[8], L2[6], L2[7], L2[8], L3[6], L3[7], L3[8], 1, 6)
-        C2 = m_bloc(L4[6], L4[7], L4[8], L5[6], L5[7], L5[8], L6[6], L6[7], L6[8], 4, 6)
-        C3 = m_bloc(L7[6], L7[7], L7[8], L8[6], L8[7], L8[8], L9[6], L9[7], L9[8], 7, 6)
+        A1 = m_bloc(*b1[:9], 1, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        A2 = m_bloc(*b2[:9], 4, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        A3 = m_bloc(*b3[:9], 7, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        B1 = m_bloc(*b4[:9], 1, 3, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        B2 = m_bloc(*b5[:9], 4, 3, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        B3 = m_bloc(*b6[:9], 7, 3, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        C1 = m_bloc(*b7[:9], 1, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        C2 = m_bloc(*b8[:9], 4, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        C3 = m_bloc(*b9[:9], 7, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
         
         obj_list = [A1, B1, C1, A2, B2, C2, A3, B3, C3]
         # On appel les méthode de tous les objets
@@ -175,9 +182,3 @@ def action():
             obj.manquants()
             obj.cases()
             obj.resolution()
-            
-action()
-
-# affichage du tableau résolu
-for i in range(1, 10):
-    print(eval(f'L{i}'))
