@@ -1,3 +1,5 @@
+! Si vous téléchargez les fichiers il risque d'y avoir des erreurs d'emplacement alors prétez y attention !
+
 Explication: 
 Je voulais résoudre des sudokus plus rapidement j'ai donc créer un code pour le faire à ma place.
 
