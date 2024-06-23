@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import sys
 from PyQt5.uic import loadUiType
-from code_source import * 
+from code_source_app import * 
 
 
 ui,_ = loadUiType('sudoku Ui\\UiPyQt.ui')
