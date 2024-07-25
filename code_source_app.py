@@ -1,3 +1,13 @@
+grandict = {
+    "1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "11": [], "12": [],
+    "13": [], "14": [], "15": [], "16": [], "17": [], "18": [], "19": [], "20": [], "21": [], "22": [], "23": [], "24": [],
+    "25": [], "26": [], "27": [], "28": [], "29": [], "30": [], "31": [], "32": [], "33": [], "34": [], "35": [], "36": [],
+    "37": [], "38": [], "39": [], "40": [], "41": [], "42": [], "43": [], "44": [], "45": [], "46": [], "47": [], "48": [],
+    "49": [], "50": [], "51": [], "52": [], "53": [], "54": [], "55": [], "56": [], "57": [], "58": [], "59": [], "60": [],
+    "61": [], "62": [], "63": [], "64": [], "65": [], "66": [], "67": [], "68": [], "69": [], "70": [], "71": [], "72": [],
+    "73": [], "74": [], "75": [], "76": [],  "77": [], "78": [], "79": [], "80": [], "81": []
+}
+
 class Parent():
     def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9):
         self.cp1 = cp1
@@ -21,7 +31,6 @@ class Parent():
                 resultat.append(i)
         return resultat
 
-    
 class m_bloc(Parent):
     def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9, o, a, L1, L2, L3, L4, L5, L6, L7, L8, L9):
             super().__init__(cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9)
@@ -114,6 +123,16 @@ class m_bloc(Parent):
                         # Si oui la est invalide et elle retiré des issues possibles (dict[3])
                         self.dict[u][3].remove(x)
 
+    def apply(self):
+        for i in self.dict:
+            ind = self.dict[i][1]
+            l = self.dict[i][2]
+            num_dict = 9 * (l-1) + 1 + ind
+            if self.dict[i][0] == "free": 
+                grandict[str(num_dict)].extend(self.dict[i][3])
+            if self.dict[i][0] == "used":
+                grandict[str(num_dict)] = []
+
     def resolution(self):
         # general est une liste qui contient toutes les issues possibles de chaque cp "free".
         general = [] 
@@ -149,11 +168,76 @@ class m_bloc(Parent):
                     for b in self.dict:
                         if self.dict[b][0] == "free":
                             if réponse in self.dict[b][3]:
-                                self.dict[b][3].remove(réponse)                  
-                                        
+                                self.dict[b][3].remove(réponse)                                                       
+
+class Advenced_res():
+    def __init__(self, A1, B1, C1, A2, B2, C2, A3, B3, C3, ln1, ln2, ln3, ln4, ln5, ln6, ln7, ln8, ln9, L1, L2, L3, L4, L5, L6, L7, L8, L9):
+        self.A1 = A1
+        self.B1 = B1
+        self.C1 = C1
+        self.A2 = A2
+        self.B2 = B2
+        self.C2 = C2
+        self.A3 = A3
+        self.B3 = B3
+        self.C3 = C3
+        self.lines = {
+            "ln1": ln1,
+            "ln2": ln2,
+            "ln3": ln3,
+            "ln4": ln4,
+            "ln5": ln5,
+            "ln6": ln6,
+            "ln7": ln7,
+            "ln8": ln8,
+            "ln9": ln9
+        }
+        self.ultime_liste = []
+        self.coordlist ={
+        "L1": L1,
+        "L2": L2,
+        "L3": L3,
+        "L4": L4,
+        "L5": L5,
+        "L6": L6,
+        "L7": L7,
+        "L8": L8,
+        "L9": L9
+    }
+        
+    def catalogue(self):
+        obj_list = [self.A1, self.B1, self.C1, self.A2, self.B2, self.C2, self.A3, self.B3, self.C3]
+        # On appel les méthode de tous les objets
+        for obj in obj_list:
+            self.ultime_liste.append(obj.dict)
+    
+    def res(self):
+        for dict in self.ultime_liste:
+            for keys in dict:
+                if dict[keys][0] == "free":
+                    l = dict[keys][2]
+                    lnum = self.lines[f"ln{l}"]
+                    listnum = self.coordlist[f"L{l}"]
+                    compare_list = []
+                    for c in lnum:
+                        compare_list.extend(list(set(grandict[c])))
+                    for i in dict[keys][3]:
+                        ni = compare_list.count(i)
+                        if ni == 1:
+                            listnum[dict[keys][1]] = i
 
 def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
     # Cette fonction correspond à l'action de résolution du sudoku.
+    ln1 = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    ln2 = ["10", "11", "12", "13", "14", "15", "16", "17", "18"]
+    ln3 = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
+    ln4 = ["28", "29", "30", "31", "32", "33", "34", "35", "36"]
+    ln5 = ["37", "38", "39", "40", "41", "42", "43", "44", "45"]
+    ln6 = ["46", "47", "48", "49", "50", "51", "52", "53", "54"]
+    ln7 = ["55", "56", "57", "58", "59", "60", "61", "62", "63"]
+    ln8 = ["64", "65", "66", "67", "68", "69", "70", "71", "72"]
+    ln9 = ["73", "74", "75", "76", "77", "78", "79", "80", "81"]
+    
     for i in range(10):
         b1 = [L1[0], L1[1], L1[2], L2[0], L2[1], L2[2], L3[0], L3[1], L3[2]]
         b2 = [L4[0], L4[1], L4[2], L5[0], L5[1], L5[2], L6[0], L6[1], L6[2]]
@@ -176,9 +260,16 @@ def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
         C2 = m_bloc(*b8[:9], 4, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
         C3 = m_bloc(*b9[:9], 7, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
         
+        
         obj_list = [A1, B1, C1, A2, B2, C2, A3, B3, C3]
         # On appel les méthode de tous les objets
         for obj in obj_list:
             obj.manquants()
             obj.cases()
+            obj.apply()
             obj.resolution()
+    
+        adres = Advenced_res(A1, B1, C1, A2, B2, C2, A3, B3, C3, ln1, ln2, ln3, ln4, ln5, ln6, ln7, ln8, ln9, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        adres.catalogue()
+        adres.res()
+        
