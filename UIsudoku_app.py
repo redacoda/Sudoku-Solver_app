@@ -6,7 +6,7 @@ from PyQt5.uic import loadUiType
 from code_source_app import * 
 
 
-ui,_ = loadUiType('sudoku Ui\\UiPyQt.ui')
+ui,_ = loadUiType('UiPyQt.ui')
 
 class MainApp(QMainWindow , ui):
     def __init__(self, parent=None):
