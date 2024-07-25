@@ -32,3 +32,6 @@ A3, B3, C3
 self.a et self.o :
 
 Ils donnent la position du cp1 et sont utilisés pour situer le bloc.
+
+
+Si vous avez des questions elles sont les bienvenues car le code peut être compliqué à comprendre malgré les commentaires ;).
