@@ -120,10 +120,11 @@ class m_bloc(Parent):
                 for x in generaliste:
                     # ... on regarde si chaque possibilité du cp se trouve la ligne (listo) de celui-ci
                     if x in listo:
-                        # Si oui la est invalide et elle retiré des issues possibles (dict[3])
+                        # Si oui la valeur est invalide et elle retiré des issues possibles (dict[3])
                         self.dict[u][3].remove(x)
 
     def apply(self):
+        # On attribut a chaque cp son emplacement dans le grandict et on y met les valeurs possiles du cp
         for i in self.dict:
             ind = self.dict[i][1]
             l = self.dict[i][2]
@@ -141,7 +142,7 @@ class m_bloc(Parent):
                 # extend est utilisé pour "unlister" une liste pour ne pas avoir de listes dans [genéral].
                 general.extend(self.dict[n][3])
         
-        # Règle de résolution 1 : Si une valeur x n'est possible que dans un seul cp, on la lui applique on supprime x des possibilités de tous les autres cp..        
+        # Règle de résolution 1 : Si une valeur x n'est possible que dans un seul cp du bloc, on la lui applique on vide la liste des issues possible du cp.        
         for w in general:
             # Si dans général une valeur est en un seul exemplaire...
             compte = general.count(w)
@@ -151,6 +152,7 @@ class m_bloc(Parent):
                             # ... c'est à dire que cette valeur est forcément la bonne. 
                             # On cherche ou situe w (soit l'issue certaine) 
                             if w in self.dict[g][3]:
+                                # on vide la liste des issues possibles avec clear()
                                 self.dict[g][3].clear()
                                 vart = self.dict[g][2]
                                 listname = self.coordlist[f"L{vart}"]
@@ -168,6 +170,7 @@ class m_bloc(Parent):
                     for b in self.dict:
                         if self.dict[b][0] == "free":
                             if réponse in self.dict[b][3]:
+                                #on enlève touts les x des isues possibles des autres cps.
                                 self.dict[b][3].remove(réponse)                                                       
 
 class Advenced_res():
@@ -209,9 +212,11 @@ class Advenced_res():
         obj_list = [self.A1, self.B1, self.C1, self.A2, self.B2, self.C2, self.A3, self.B3, self.C3]
         # On appel les méthode de tous les objets
         for obj in obj_list:
+            # on récupère tous les dictionnaires (en gros on fait un catalogue 
             self.ultime_liste.append(obj.dict)
     
     def res(self):
+        # ici on compare grace a grandict la probabilité des cp d'une ligne pour trouver de nouvelle façon de se débloquer
         for dict in self.ultime_liste:
             for keys in dict:
                 if dict[keys][0] == "free":
@@ -228,6 +233,8 @@ class Advenced_res():
 
 def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
     # Cette fonction correspond à l'action de résolution du sudoku.
+
+    # aide au repérage dans grandict pour les cps
     ln1 = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     ln2 = ["10", "11", "12", "13", "14", "15", "16", "17", "18"]
     ln3 = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
@@ -239,6 +246,7 @@ def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
     ln9 = ["73", "74", "75", "76", "77", "78", "79", "80", "81"]
     
     for i in range(10):
+        # On redéfinit les valeurs à chaque itération de la boucle pour actualiser les valeurs de chaque case
         b1 = [L1[0], L1[1], L1[2], L2[0], L2[1], L2[2], L3[0], L3[1], L3[2]]
         b2 = [L4[0], L4[1], L4[2], L5[0], L5[1], L5[2], L6[0], L6[1], L6[2]]
         b3 = [L7[0], L7[1], L7[2], L8[0], L8[1], L8[2], L9[0], L9[1], L9[2]]
@@ -249,7 +257,6 @@ def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
         b8 = [L4[6], L4[7], L4[8], L5[6], L5[7], L5[8], L6[6], L6[7], L6[8]]
         b9 = [L7[6], L7[7], L7[8], L8[6], L8[7], L8[8], L9[6], L9[7], L9[8]]
         
-        # On redéfinit les objet à chaque itération de la boucle pour actualiser les valeurs de chaque case
         A1 = m_bloc(*b1[:9], 1, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
         A2 = m_bloc(*b2[:9], 4, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
         A3 = m_bloc(*b3[:9], 7, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
