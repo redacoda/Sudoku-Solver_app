@@ -1,12 +1,7 @@
-grandict = {
-    "1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "11": [], "12": [],
-    "13": [], "14": [], "15": [], "16": [], "17": [], "18": [], "19": [], "20": [], "21": [], "22": [], "23": [], "24": [],
-    "25": [], "26": [], "27": [], "28": [], "29": [], "30": [], "31": [], "32": [], "33": [], "34": [], "35": [], "36": [],
-    "37": [], "38": [], "39": [], "40": [], "41": [], "42": [], "43": [], "44": [], "45": [], "46": [], "47": [], "48": [],
-    "49": [], "50": [], "51": [], "52": [], "53": [], "54": [], "55": [], "56": [], "57": [], "58": [], "59": [], "60": [],
-    "61": [], "62": [], "63": [], "64": [], "65": [], "66": [], "67": [], "68": [], "69": [], "70": [], "71": [], "72": [],
-    "73": [], "74": [], "75": [], "76": [],  "77": [], "78": [], "79": [], "80": [], "81": []
-}
+# grandict est un dictionnaire qui contient toutes les possibilités de chaque case pour pour être à jour entre chaque méthode de résolution
+grandict = {}
+for i in range(1, 82):  
+    grandict[str(i)] = []
 
 class Parent():
     def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9):
@@ -31,6 +26,7 @@ class Parent():
                 resultat.append(i)
         return resultat
 
+# Classe qui hérite de la classe parent 
 class m_bloc(Parent):
     def __init__(self, cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9, o, a, L1, L2, L3, L4, L5, L6, L7, L8, L9):
             super().__init__(cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, cp9)
@@ -74,7 +70,7 @@ class m_bloc(Parent):
         values = [self.cp1, self.cp2, self.cp3, self.cp4, self.cp5, self.cp6, self.cp7, self.cp8, self.cp9]
         a = 0
         
-        # On attribut un état a chaque case pour savoir si elle est libre ou non (dans le dict)
+        # On attribut un état à chaque case pour savoir si elle est libre ou non (dans le dict)
         for e in values:
             a += 1
             key = f"cp{a}"
@@ -90,7 +86,6 @@ class m_bloc(Parent):
                 self.dict[e].append(self.a + x)
                 self.dict[e].append(self.o + y)
         
-        
         for e in self.dict:
             if e in self.coords:
                 x, y = self.coords[e]
@@ -102,7 +97,7 @@ class m_bloc(Parent):
                     # On regarde si chaque possibilité du cp se trouve la colone (lista) de celui-ci
                     for z in lista:
                         if z in self.dict[e][3]:
-                            # Si oui la est invalide et elle retiré des issues possibles (dict[3])
+                            # Si oui la valeur est invalide et elle retiré des issues possibles (dict[3])
                             self.dict[e][3].remove(z)
                                             
         nom = self.o + y
@@ -120,11 +115,10 @@ class m_bloc(Parent):
                 for x in generaliste:
                     # ... on regarde si chaque possibilité du cp se trouve la ligne (listo) de celui-ci
                     if x in listo:
-                        # Si oui la valeur est invalide et elle retiré des issues possibles (dict[3])
+                        # Si oui la est invalide et elle retiré des issues possibles (dict[3])
                         self.dict[u][3].remove(x)
 
     def apply(self):
-        # On attribut a chaque cp son emplacement dans le grandict et on y met les valeurs possiles du cp
         for i in self.dict:
             ind = self.dict[i][1]
             l = self.dict[i][2]
@@ -142,7 +136,7 @@ class m_bloc(Parent):
                 # extend est utilisé pour "unlister" une liste pour ne pas avoir de listes dans [genéral].
                 general.extend(self.dict[n][3])
         
-        # Règle de résolution 1 : Si une valeur x n'est possible que dans un seul cp du bloc, on la lui applique on vide la liste des issues possible du cp.        
+        # Règle de résolution 1 : Si une valeur x n'est possible que dans un seul cp, on la lui applique on supprime x des possibilités de tous les autres cp..        
         for w in general:
             # Si dans général une valeur est en un seul exemplaire...
             compte = general.count(w)
@@ -152,7 +146,6 @@ class m_bloc(Parent):
                             # ... c'est à dire que cette valeur est forcément la bonne. 
                             # On cherche ou situe w (soit l'issue certaine) 
                             if w in self.dict[g][3]:
-                                # on vide la liste des issues possibles avec clear()
                                 self.dict[g][3].clear()
                                 vart = self.dict[g][2]
                                 listname = self.coordlist[f"L{vart}"]
@@ -170,9 +163,9 @@ class m_bloc(Parent):
                     for b in self.dict:
                         if self.dict[b][0] == "free":
                             if réponse in self.dict[b][3]:
-                                #on enlève touts les x des isues possibles des autres cps.
                                 self.dict[b][3].remove(réponse)                                                       
 
+# Cette classe permet de résoudre des sudokus plus complexes en élargissant le champ de vision de notre programme du bloc à la ligne
 class Advenced_res():
     def __init__(self, A1, B1, C1, A2, B2, C2, A3, B3, C3, ln1, ln2, ln3, ln4, ln5, ln6, ln7, ln8, ln9, L1, L2, L3, L4, L5, L6, L7, L8, L9):
         self.A1 = A1
@@ -209,20 +202,22 @@ class Advenced_res():
     }
         
     def catalogue(self):
+        # Cette méthode est utilisée pour pour cataloguer ou regrouper toutes les possibilités/issues posibles de chaque compossant elles même enregistrées dans les dictionnaires de chaque bloc
         obj_list = [self.A1, self.B1, self.C1, self.A2, self.B2, self.C2, self.A3, self.B3, self.C3]
         # On appel les méthode de tous les objets
         for obj in obj_list:
-            # on récupère tous les dictionnaires (en gros on fait un catalogue 
             self.ultime_liste.append(obj.dict)
     
     def res(self):
-        # ici on compare grace a grandict la probabilité des cp d'une ligne pour trouver de nouvelle façon de se débloquer
         for dict in self.ultime_liste:
             for keys in dict:
+                # Si la case n'est pas déja occupée ...
                 if dict[keys][0] == "free":
+                    # on stocke le n° de la ligne dans l et on veut dans les 3 prochaines lignes récupérer la liste "ORIGINALE" (celle qui figure dans les arguments de la classe) qui correspond à la ligne du composant mais on veut aussi récupérer les keys pour accéder à grandict. Enfin on stocke cette liste dans listenum.
                     l = dict[keys][2]
                     lnum = self.lines[f"ln{l}"]
                     listnum = self.coordlist[f"L{l}"]
+                    # On créer une liste pour la comparer avec la liste "ORIGINALE"
                     compare_list = []
                     for c in lnum:
                         compare_list.extend(list(set(grandict[c])))
@@ -232,9 +227,8 @@ class Advenced_res():
                             listnum[dict[keys][1]] = i
 
 def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
-    # Cette fonction correspond à l'action de résolution du sudoku.
-
-    # aide au repérage dans grandict pour les cps
+# Cette fonction correspond à l'action de résolution du sudoku.
+    # on défini ln(x) pour avoir un accès (normalement) plus facile à grandict
     ln1 = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     ln2 = ["10", "11", "12", "13", "14", "15", "16", "17", "18"]
     ln3 = ["19", "20", "21", "22", "23", "24", "25", "26", "27"]
@@ -245,8 +239,8 @@ def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
     ln8 = ["64", "65", "66", "67", "68", "69", "70", "71", "72"]
     ln9 = ["73", "74", "75", "76", "77", "78", "79", "80", "81"]
     
+    # On utilise une boucle car la résolution ne se fait pas en une fois
     for i in range(10):
-        # On redéfinit les valeurs à chaque itération de la boucle pour actualiser les valeurs de chaque case
         b1 = [L1[0], L1[1], L1[2], L2[0], L2[1], L2[2], L3[0], L3[1], L3[2]]
         b2 = [L4[0], L4[1], L4[2], L5[0], L5[1], L5[2], L6[0], L6[1], L6[2]]
         b3 = [L7[0], L7[1], L7[2], L8[0], L8[1], L8[2], L9[0], L9[1], L9[2]]
@@ -257,15 +251,18 @@ def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
         b8 = [L4[6], L4[7], L4[8], L5[6], L5[7], L5[8], L6[6], L6[7], L6[8]]
         b9 = [L7[6], L7[7], L7[8], L8[6], L8[7], L8[8], L9[6], L9[7], L9[8]]
         
-        A1 = m_bloc(*b1[:9], 1, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        A2 = m_bloc(*b2[:9], 4, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        A3 = m_bloc(*b3[:9], 7, 0, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        B1 = m_bloc(*b4[:9], 1, 3, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        B2 = m_bloc(*b5[:9], 4, 3, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        B3 = m_bloc(*b6[:9], 7, 3, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        C1 = m_bloc(*b7[:9], 1, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        C2 = m_bloc(*b8[:9], 4, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
-        C3 = m_bloc(*b9[:9], 7, 6, L1, L2, L3, L4, L5, L6, L7, L8, L9)
+        # On redéfinit les objet à chaque itération de la boucle pour actualiser les valeurs de chaque case
+        liste = [L1, L2, L3, L4, L5, L6, L7, L8, L9]
+        # *b1[:9] permet de "dérouler" la liste affectée à b1 au lieu d'écrire --A1 = m_bloc(L1[0], L1[1], L1[2], L2[0], ...., 1, 0 ...)-- de même pour *liste[:9] qui permet de "dérouler" liste 
+        A1 = m_bloc(*b1[:9], 1, 0, *liste[:9])
+        A2 = m_bloc(*b2[:9], 4, 0, *liste[:9])
+        A3 = m_bloc(*b3[:9], 7, 0, *liste[:9])
+        B1 = m_bloc(*b4[:9], 1, 3, *liste[:9])
+        B2 = m_bloc(*b5[:9], 4, 3, *liste[:9])
+        B3 = m_bloc(*b6[:9], 7, 3, *liste[:9])
+        C1 = m_bloc(*b7[:9], 1, 6, *liste[:9])
+        C2 = m_bloc(*b8[:9], 4, 6, *liste[:9])
+        C3 = m_bloc(*b9[:9], 7, 6, *liste[:9])
         
         
         obj_list = [A1, B1, C1, A2, B2, C2, A3, B3, C3]
@@ -275,8 +272,7 @@ def action(L1, L2, L3, L4, L5, L6, L7, L8, L9):
             obj.cases()
             obj.apply()
             obj.resolution()
-    
+        # On appel la classe advenced_res une seule fois car elle couvre toute la grille
         adres = Advenced_res(A1, B1, C1, A2, B2, C2, A3, B3, C3, ln1, ln2, ln3, ln4, ln5, ln6, ln7, ln8, ln9, L1, L2, L3, L4, L5, L6, L7, L8, L9)
         adres.catalogue()
         adres.res()
-        
